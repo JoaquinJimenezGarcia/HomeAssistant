@@ -1,10 +1,11 @@
 from flask import Flask,jsonify
 import RPi.GPIO as GPIO
+from settings import *
 
 app = Flask(__name__)
 
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(7, GPIO.OUT)
+GPIO.setup(pin_luces, GPIO.OUT)
 
 @app.route('/')
 def index():
@@ -12,14 +13,14 @@ def index():
 
 @app.route('/apagar')
 def apagar():
-    GPIO.output(7, False)
+    GPIO.output(pin_luces, False)
     return jsonify({"destinatario":1,"mensaje":"Todo apagado"})
 
 @app.route('/encender')
 def encender():
-    GPIO.output(7, True)
+    GPIO.output(pin_luces, True)
     return jsonify({"destinatario":1,"mensaje":"Todo encendido"})
 
 @app.route('/buenos-dias')
 def buenosdias():
-    return jsonify({"destinatario":1,"mensaje":""})
+    return jsonify({"destinatario":1,"mensaje":"Buenos días, Joaquín"})

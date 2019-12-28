@@ -6,6 +6,7 @@ import webbrowser
 import requests
 import json
 from gtts import gTTS
+from settings import *
 
 def recordAudio():
     r = sr.Recognizer()
@@ -55,7 +56,7 @@ def jarvis(data):
         speech.save("voz.mp3")
         
         os.system("mpg321 voz.mp3")'''
-        request = requests.get("http://192.168.1.104:5000/encender")
+        request = requests.get(ip_server+"encender")
         respuesta = json.loads(request.text)
         
         speech = gTTS(text=respuesta["mensaje"],lang='es',slow=False)
@@ -64,7 +65,7 @@ def jarvis(data):
         os.system("mpg321 voz.mp3")
 
     elif "adiós" in data:
-        request = requests.get("http://192.168.1.104:5000/apagar")
+        request = requests.get(ip_server+"apagar")
         respuesta = json.loads(request.text)
         
         speech = gTTS(text=respuesta["mensaje"],lang='es',slow=False)
