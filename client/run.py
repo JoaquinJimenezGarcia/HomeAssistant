@@ -8,6 +8,7 @@ import json
 from gtts import gTTS
 from settings import *
 
+
 def recordAudio():
     r = sr.Recognizer()
 
@@ -20,17 +21,15 @@ def recordAudio():
     try:
         data = r.recognize_google(audio, language="es-ES")
         print(data)
-        if data == 'Mónica':
+        if data == 'Asistente':
             escucha()
     except sr.UnknownValueError:
         print("Error on value")
     except sr.RequestError as e:
         print("No se ha obtenido respuesta desde los servicios de Google Speech Recognition: " + e)
 
-    return data
 
 def escucha():
-
     r = sr.Recognizer()
 
     with sr.Microphone() as source:
@@ -48,14 +47,11 @@ def escucha():
     except sr.RequestError as e:
         print("No se ha obtenido respuesta desde los servicios de Google Speech Recognition: " + e)
 
-    return data
+    recordAudio()
+
 
 def jarvis(data):
     if "hola" in data:
-        '''speech = gTTS(text="Hola, Joaquin",lang='es',slow=False)
-        speech.save("voz.mp3")
-        
-        os.system("mpg321 voz.mp3")'''
         request = requests.get(ip_server+"encender")
         respuesta = json.loads(request.text)
         
@@ -75,5 +71,4 @@ def jarvis(data):
         
 
 while 1:
-    data = recordAudio()
-    jarvis(data)
+    recordAudio()
