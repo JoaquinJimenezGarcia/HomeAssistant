@@ -1,1 +1,0 @@
-pin_luces=7
