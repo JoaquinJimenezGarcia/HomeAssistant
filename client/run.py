@@ -21,7 +21,7 @@ def recordAudio():
     try:
         data = r.recognize_google(audio, language="es-ES")
         print(data)
-        if data == 'Asistente':
+        if data == 'asistente':
             escucha()
     except sr.UnknownValueError:
         print("Error on value")
