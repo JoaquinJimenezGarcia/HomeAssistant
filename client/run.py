@@ -7,7 +7,7 @@ import requests
 import json
 from gtts import gTTS
 
-ip_server="http://192.168.1.104:5000/"
+ip_server="http://192.168.1.105:5000/"
 
 def recordAudio():
     r = sr.Recognizer()
@@ -60,7 +60,7 @@ def jarvis(data):
         
         os.system("mpg321 voz.mp3")
 
-    elif "adios" in data:
+    elif "adiós" in data:
         request = requests.get(ip_server+"apagar")
         respuesta = json.loads(request.text)
         
