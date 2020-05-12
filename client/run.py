@@ -6,7 +6,6 @@ import webbrowser
 import requests
 import json
 from gtts import gTTS
-from settings import *
 
 ip_server="http://192.168.1.104:5000/"
 
