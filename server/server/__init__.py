@@ -1,5 +1,7 @@
 from flask import Flask,jsonify
 import RPi.GPIO as GPIO
+from gtts import gTTS
+import os
 
 app = Flask(__name__)
 
@@ -10,6 +12,11 @@ GPIO.setup(pin_luces, GPIO.OUT)
 
 @app.route('/')
 def index():
+    speech = gTTS("Hola amiguito",lang='es',slow=False)
+    speech.save("voz.mp3")
+    
+    os.system("mpg321 voz.mp3")
+
     return jsonify({"message":"This is your home assistant from the net"})
 
 @app.route('/apagar')

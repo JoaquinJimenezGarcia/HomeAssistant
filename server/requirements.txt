@@ -1,2 +1,4 @@
 Flask
 RPi.GPIO
+gTTS
+mpyg321
