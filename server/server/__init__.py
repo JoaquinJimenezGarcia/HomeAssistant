@@ -12,7 +12,7 @@ GPIO.setup(pin_luces, GPIO.OUT)
 
 @app.route('/')
 def index():
-    speech = gTTS("Hola amiguito",lang='es',slow=False)
+    speech = gTTS("Conectado y funcionando",lang='es',slow=False)
     speech.save("voz.mp3")
     
     os.system("mpg321 voz.mp3")

@@ -22,6 +22,10 @@ def recordAudio():
         data = r.recognize_google(audio, language="es-ES")
         print(data)
         if data == 'asistente':
+            speech = gTTS("Dime, Joaquin",lang='es',slow=False)
+            speech.save("voz.mp3")
+
+            os.system("mpg321 voz.mp3")
             escucha()
     except sr.UnknownValueError:
         print("Error on value")
@@ -59,9 +63,9 @@ def jarvis(data):
         speech.save("voz.mp3")
         
         os.system("mpg321 voz.mp3")
-    elif "conexi√n" in data:
+    elif "estado" in data:
         request = requests.get(ip_server)
-    elif "adi√≥s" in data:
+    elif "adios" in data:
         request = requests.get(ip_server+"apagar")
         respuesta = json.loads(request.text)
         
