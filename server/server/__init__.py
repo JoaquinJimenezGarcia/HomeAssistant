@@ -1,34 +1,46 @@
+__author__ = 'JJGDevelopment'
+
 from flask import Flask,jsonify
 import RPi.GPIO as GPIO
 from gtts import gTTS
 import os
+import wikipedia
 
 app = Flask(__name__)
 
 pin_luces = 7
+
+wikipedia.set_lang("en")
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(pin_luces, GPIO.OUT)
 
 @app.route('/')
 def index():
-    speech = gTTS("Conectado y funcionando",lang='es',slow=False)
-    speech.save("voz.mp3")
-    
-    os.system("mpg321 voz.mp3")
+    return_answer(1, "This is your home assistant from the net.")
 
-    return jsonify({"message":"This is your home assistant from the net"})
-
-@app.route('/apagar')
+@app.route('/switch_off')
 def apagar():
-    GPIO.output(pin_luces, False)
-    return jsonify({"destinatario":1,"mensaje":"Todo apagado"})
+    switch_pin(pin_luces, False)
+    return_answer(1, "Everything is off.")
 
-@app.route('/encender')
+@app.route('/switch_on')
 def encender():
-    GPIO.output(pin_luces, True)
-    return jsonify({"destinatario":1,"mensaje":"Todo encendido"})
+    switch_pin(pin_luces, True)
+    return_answer(1, "Everything is on.")
 
-@app.route('/buenos-dias')
+@app.route('/morning')
 def buenosdias():
-    return jsonify({"destinatario":1,"mensaje":"Buenos dias, Joaqin"})
+    return_answer(1, "Good morning, Joaquin")
+
+@app.route('/search/<term>')
+def search_wikipedia(term):
+    description = wikipedia.summary(term, sentences=1)
+
+    return_answer(1, description)
+
+def return_answer(destiny, message):
+    return jsonify({"destiny":destiny, "message":message})
+
+def switch_pin(pin, state):
+    GPIO.output(pin, state)
