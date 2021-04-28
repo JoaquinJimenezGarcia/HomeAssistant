@@ -7,7 +7,7 @@ import requests
 import json
 from gtts import gTTS
 
-ip_server="http://192.168.1.105:5000/"
+ip_server="http://localhost:5000/"
 
 def recordAudio():
     r = sr.Recognizer()
@@ -17,20 +17,17 @@ def recordAudio():
         audio = r.listen(source)
 
     data = ""
-
+    
     try:
-        data = r.recognize_google(audio, language="es-ES")
+        data = r.recognize_google(audio, language="en-EN")
         print(data)
-        if data == 'asistente':
-            speech = gTTS("Dime, Joaquin",lang='es',slow=False)
-            speech.save("voz.mp3")
-
-            os.system("mpg321 voz.mp3")
+        if data == 'hello':
+            speak('Tell me, Joaquin')
             escucha()
-    except sr.UnknownValueError:
-        print("Error on value")
+    except sr.UnknownValueError as e:
+        print("Error on value: " + str(e))
     except sr.RequestError as e:
-        print("No se ha obtenido respuesta desde los servicios de Google Speech Recognition: " + e)
+        print("Request error.")
 
 
 def escucha():
@@ -43,37 +40,54 @@ def escucha():
     data = ""
 
     try:
-        data = r.recognize_google(audio, language="es-ES")
-        print("You've said: " + data)
+        data = r.recognize_google(audio, language="en")
         jarvis(data)
     except sr.UnknownValueError:
         print("Hearing...")
-    except sr.RequestError as e:
-        print("No se ha obtenido respuesta desde los servicios de Google Speech Recognition: " + e)
+    except sr.RequestError:
+        print("Error gathering info.")
 
     recordAudio()
 
 
 def jarvis(data):
-    if "hola" in data:
-        request = requests.get(ip_server+"encender")
+    response_text = "I'm sorry I didn't get that."
+
+    if "switch on" in data:
+        response_text = server_request("switch_on")
+    elif "state" in data:
+        response_text = server_request("")
+    elif "bye" in data:
+        response_text = server_request("switch_off")
+    elif "morning" in data:
+        response_text = server_request("morning")
+    elif "what is" in data:
+        term = data.replace("what is ", "")
+        
+        response_text = server_request("/search/" + term)
+    elif "play" in data:
+        response_text = "I'm sorry. I cannot play music on Spotify yet."
+
+    try:
+        speak(response_text)
+    except:
+        speak("Sorry, I cannot help you with that.")
+
+
+def server_request(api_path):
+    try:
+        request = requests.get(ip_server + api_path)
         respuesta = json.loads(request.text)
         
-        speech = gTTS(text=respuesta["mensaje"],lang='es',slow=False)
-        speech.save("voz.mp3")
+        return respuesta['message']
+    except:
+        return "Sorry, there was an error trying to connect to server."
+
+def speak(text):
+    speech = gTTS(text=text,lang='en',slow=False)
+    speech.save("voice.mp3")
         
-        os.system("mpg321 voz.mp3")
-    elif "estado" in data:
-        request = requests.get(ip_server)
-    elif "adios" in data:
-        request = requests.get(ip_server+"apagar")
-        respuesta = json.loads(request.text)
-        
-        speech = gTTS(text=respuesta["mensaje"],lang='es',slow=False)
-        speech.save("voz.mp3")
-        
-        os.system("mpg321 voz.mp3")
-        
+    os.system("mpg321 voice.mp3")
 
 while 1:
     recordAudio()

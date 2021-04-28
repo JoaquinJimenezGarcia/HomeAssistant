@@ -2,3 +2,4 @@ Flask
 RPi.GPIO
 gTTS
 mpyg321
+wikipedia
