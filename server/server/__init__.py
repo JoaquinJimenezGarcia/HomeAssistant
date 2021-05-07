@@ -1,3 +1,5 @@
+__author__ = 'JJGDevelopment'
+
 from flask import Flask,jsonify
 import RPi.GPIO as GPIO
 from gtts import gTTS
