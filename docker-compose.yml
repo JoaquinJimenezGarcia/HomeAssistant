@@ -13,8 +13,16 @@ services:
         volumes:
             - ./vision:/usr/src/app
         privileged: true
+        deploy:
+            resources:
+              limits:
+                cpus: '3'
+                memory: 2048M
+              reservations:
+                cpus: '2'
+                memory: 1024M
     spear:
         build: ./client
         volumes:
-            - /.client:/usr/src/app
+            - ./client:/usr/src/app
         privileged: true
