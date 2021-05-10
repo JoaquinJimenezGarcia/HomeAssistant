@@ -1,34 +1,56 @@
+__author__ = 'JJGDevelopment'
+
 from flask import Flask,jsonify
 import RPi.GPIO as GPIO
 from gtts import gTTS
 import os
+import wikipedia
 
 app = Flask(__name__)
 
 pin_luces = 7
 
+wikipedia.set_lang("en")
+
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(pin_luces, GPIO.OUT)
 
 @app.route('/')
-def index():
-    speech = gTTS("Conectado y funcionando",lang='es',slow=False)
-    speech.save("voz.mp3")
+def status():
+    return {"destiny":"1", "message":"This is your home assistant from the net."}
+
+@app.route('/switch_off')
+def switch_off():
+    switch_pin(pin_luces, False)
     
-    os.system("mpg321 voz.mp3")
+    return {"destiny":"1", "message":"Everything is off."}
 
-    return jsonify({"message":"This is your home assistant from the net"})
+@app.route('/switch_on')
+def switch_on():
+    switch_pin(pin_luces, True)
 
-@app.route('/apagar')
-def apagar():
-    GPIO.output(pin_luces, False)
-    return jsonify({"destinatario":1,"mensaje":"Todo apagado"})
+    return {"destiny":"1", "message":"Everything is on."}
 
-@app.route('/encender')
-def encender():
-    GPIO.output(pin_luces, True)
-    return jsonify({"destinatario":1,"mensaje":"Todo encendido"})
+@app.route('/morning')
+def good_morning():
+    return {"destiny":"1", "message":"Good morning, Joaquin"}
 
-@app.route('/buenos-dias')
-def buenosdias():
-    return jsonify({"destinatario":1,"mensaje":"Buenos dias, Joaqin"})
+@app.route('/search/<term>')
+def search_wikipedia(term):
+    description = wikipedia.summary(term, sentences=1)
+
+    return {"destiny":"1", "message":description}
+
+@app.route('/<path:data>')
+def get_message(data):
+    return_message = 'Error parsing the response in the server.'
+
+    if 'hello' in data:
+        return_message = good_morning()
+        return jsonify(return_message)
+
+    else:
+        return jsonify(return_message)
+
+def switch_pin(pin, state):
+    GPIO.output(pin, state)

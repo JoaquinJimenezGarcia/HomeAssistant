@@ -1,0 +1,28 @@
+version: '3.4'
+
+services: 
+    brain:
+        build: ./server
+        volumes:
+            - ./server:/usr/src/app
+        ports: 
+            - 5000:80
+        privileged: true
+    computing_vision:
+        build: ./vision
+        volumes:
+            - ./vision:/usr/src/app
+        privileged: true
+        deploy:
+            resources:
+              limits:
+                cpus: '3'
+                memory: 2048M
+              reservations:
+                cpus: '2'
+                memory: 1024M
+    spear:
+        build: ./client
+        volumes:
+            - ./client:/usr/src/app
+        privileged: true
