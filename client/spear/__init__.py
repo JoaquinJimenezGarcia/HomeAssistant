@@ -28,14 +28,14 @@ def recordAudio():
         print(data)
         if data == 'hello':
             speak('Tell me, Joaquin')
-            escucha()
+            listen()
     except sr.UnknownValueError as e:
         print("Error on value: " + str(e))
     except sr.RequestError as e:
         print("Request error.")
 
 
-def escucha():
+def listen():
     r = sr.Recognizer()
 
     with sr.Microphone() as source:
@@ -56,22 +56,7 @@ def escucha():
 
 
 def jarvis(data):
-    response_text = "I'm sorry I didn't get that."
-
-    if "switch on" in data:
-        response_text = server_request("switch_on")
-    elif "state" in data:
-        response_text = server_request("")
-    elif "bye" in data:
-        response_text = server_request("switch_off")
-    elif "morning" in data:
-        response_text = server_request("morning")
-    elif "what is" in data:
-        term = data.replace("what is ", "")
-        
-        response_text = server_request("/search/" + term)
-    elif "play" in data:
-        response_text = "I'm sorry. I cannot play music on Spotify yet."
+    response_text = server_request(data)
 
     try:
         speak(response_text)
@@ -79,7 +64,7 @@ def jarvis(data):
         speak("Sorry, I cannot help you with that.")
 
 
-def server_request(api_path):
+def server_request(api_path):    
     try:
         request = requests.get(ip_server + api_path)
         respuesta = json.loads(request.text)

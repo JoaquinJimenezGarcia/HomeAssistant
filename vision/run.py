@@ -1,6 +1,11 @@
 import face_recognition as face_recognition
 import cv2 as cv2
 import numpy as np
+import requests
+import json
+
+# IP for voice service
+ip_voice = "http://localhost:5001/"
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -27,6 +32,8 @@ face_locations = []
 face_encodings = []
 face_names = []
 process_this_frame = True
+known_person = False
+first_time_found = True
 
 while True:
     # Grab a single frame of video
@@ -61,8 +68,17 @@ while True:
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
 
-                print('Hello %s' % name)
+                known_person = True
 
+                if known_person and first_time_found:
+                    print('Hello %s. How are you today?' % name)
+                    first_time_found = False
+            else:
+                known_person = False
+                # Set to true so it can enter in the previous if next time it found a face
+                first_time_found = True
+
+                print('There is a stranger in the room. Please exit or I will call security.')
             face_names.append(name)
 
     process_this_frame = not process_this_frame
@@ -70,3 +86,11 @@ while True:
 # Release handle to the webcam
 video_capture.release()
 cv2.destroyAllWindows()
+
+def server_request(api_path):
+    try:
+        requests.get(ip_voice + api_path)
+        
+        return "Sended to voice service"
+    except:
+        return "Sorry, there was an error trying to connect to voice service."
