@@ -16,18 +16,20 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(pin_luces, GPIO.OUT)
 
 @app.route('/')
-def index():
-    return_answer(1, "This is your home assistant from the net.")
+def status():
+    return {"destiny":"1", "message":"This is your home assistant from the net."}
 
 @app.route('/switch_off')
 def switch_off():
     switch_pin(pin_luces, False)
-    return_answer(1, "Everything is off.")
+    
+    return {"destiny":"1", "message":"Everything is off."}
 
 @app.route('/switch_on')
 def switch_on():
     switch_pin(pin_luces, True)
-    return_answer(1, "Everything is on.")
+
+    return {"destiny":"1", "message":"Everything is on."}
 
 @app.route('/morning')
 def good_morning():
@@ -37,10 +39,7 @@ def good_morning():
 def search_wikipedia(term):
     description = wikipedia.summary(term, sentences=1)
 
-    return_answer(1, description)
-
-def return_answer(destiny, message):
-    return jsonify({"destiny":destiny, "message":message})
+    return {"destiny":"1", "message":description}
 
 @app.route('/<path:data>')
 def get_message(data):
