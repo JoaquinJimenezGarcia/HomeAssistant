@@ -47,10 +47,15 @@ def get_message(data):
 
     if 'hello' in data:
         return_message = good_morning()
-        return jsonify(return_message)
+    elif 'what is' in data:
+        term = data.replace("what is ", "")
+        return_message = search_wikipedia(term)
+    elif 'bye' in data:
+        return_message = switch_off()
+    elif 'turn on' in data:
+        return_message = switch_on()
 
-    else:
-        return jsonify(return_message)
+    return jsonify(return_message)
 
 def switch_pin(pin, state):
     GPIO.output(pin, state)
