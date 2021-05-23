@@ -3,12 +3,15 @@ __author__ = 'JJGDevelopment'
 from flask import Flask,jsonify
 import RPi.GPIO as GPIO
 from gtts import gTTS
-import os
+import yaml
 import wikipedia
 
 app = Flask(__name__)
 
-pin_luces = 7
+with open("server/server/config.yaml", "r") as f:
+    config = yaml.load(f)
+
+pin_luces = config['pin_lights']
 
 wikipedia.set_lang("en")
 
