@@ -3,29 +3,38 @@ import cv2 as cv2
 import numpy as np
 import requests
 import json
+import yaml
 
 # IP for voice service
 ip_voice = "http://localhost:5001/"
+
+with open("vision/config.yaml", "r") as f:
+    config = yaml.load(f)
+
+people = config['people']
+
+print(people)
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
 # Load a sample picture and learn how to recognize it.
-joaquin_image = face_recognition.load_image_file("people/joaquin.png")
-agnieskza_image = face_recognition.load_image_file("people/agnieszka.jpg")
+people_images = []
+for person in people:
+    people_images.append(face_recognition.load_image_file('vision/' + person['picture_path']))
 
-joaquin_face_encoding = face_recognition.face_encodings(joaquin_image)[0]
-agnieszka_face_encoding = face_recognition.face_encodings(agnieskza_image)[0]
+people_face_encodig = []
+for person_image in people_images:
+    people_face_encodig.append(face_recognition.face_encodings(person_image)[0])
 
 # Create arrays of known face encodings and their names
-known_face_encodings = [
-    joaquin_face_encoding,
-    agnieszka_face_encoding
-]
-known_face_names = [
-    "Joaquin",
-    "Agnieszka"
-]
+known_face_encodings = []
+for person_face_encodig in people_face_encodig:
+    known_face_encodings.append(person_face_encodig)
+
+known_face_names = []
+for face_name in people:
+    known_face_names.append(face_name['name'])
 
 # Initialize some variables
 face_locations = []

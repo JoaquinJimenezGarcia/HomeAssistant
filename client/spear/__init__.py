@@ -2,9 +2,8 @@ __author__ = 'JJGDevelopment'
 
 import speech_recognition as sr
 from time import ctime
-import time
 import os
-import webbrowser
+import yaml
 import requests
 import json
 from gtts import gTTS
@@ -12,7 +11,10 @@ from flask import Flask,jsonify
 
 app = Flask(__name__)
 
-ip_server="http://localhost:5000/"
+with open("client/spear/config.yaml", "r") as f:
+    config = yaml.load(f)
+
+ip_server = config['ip_server']
 
 def recordAudio():
     r = sr.Recognizer()
@@ -64,14 +66,15 @@ def jarvis(data):
         speak("Sorry, I cannot help you with that.")
 
 
-def server_request(api_path):    
+def server_request(api_path): 
     try:
         request = requests.get(ip_server + api_path)
         respuesta = json.loads(request.text)
         
         return respuesta['message']
-    except:
-        return "Sorry, there was an error trying to connect to server."
+    except Exception as e:
+        print("Sorry, there was an error trying to connect to server. %s " % str(e))
+        return "Sorry, there was an error trying to connect to server. %s " % str(e)
 
 def speak(text):
     speech = gTTS(text=text,lang='en',slow=False)

@@ -1,0 +1,5 @@
+people:
+  - name: PERSON_1
+    picture_path: 1.png
+  - name: PERSON_2
+    picture_path: 2.png
