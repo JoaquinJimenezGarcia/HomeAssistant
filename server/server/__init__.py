@@ -5,10 +5,12 @@ import RPi.GPIO as GPIO
 from gtts import gTTS
 import yaml
 import wikipedia
+import os
 
 app = Flask(__name__)
+path = os.getcwd()
 
-with open("server/server/config.yaml", "r") as f:
+with open(path+"/server/config.yaml", "r") as f:
     config = yaml.load(f)
 
 pin_luces = config['pin_lights']

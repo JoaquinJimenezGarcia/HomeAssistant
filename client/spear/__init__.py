@@ -10,8 +10,9 @@ from gtts import gTTS
 from flask import Flask,jsonify
 
 app = Flask(__name__)
+path = os.getcwd()
 
-with open("client/spear/config.yaml", "r") as f:
+with open(path+"/spear/config.yaml", "r") as f:
     config = yaml.load(f)
 
 ip_server = config['ip_server']
@@ -31,10 +32,8 @@ def recordAudio():
         if data == 'hello':
             speak('Tell me, Joaquin')
             listen()
-    except sr.UnknownValueError as e:
-        print("Error on value: " + str(e))
-    except sr.RequestError as e:
-        print("Request error.")
+    except Exception as e:
+        print("Exception: " + str(e))
 
 
 def listen():

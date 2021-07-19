@@ -4,11 +4,14 @@ import numpy as np
 import requests
 import json
 import yaml
+import os
 
 # IP for voice service
 ip_voice = "http://localhost:5001/"
 
-with open("vision/config.yaml", "r") as f:
+path = os.getcwd()
+
+with open(path+"/config.yaml", "r") as f:
     config = yaml.load(f)
 
 people = config['people']
@@ -21,7 +24,7 @@ video_capture = cv2.VideoCapture(0)
 # Load a sample picture and learn how to recognize it.
 people_images = []
 for person in people:
-    people_images.append(face_recognition.load_image_file('vision/' + person['picture_path']))
+    people_images.append(face_recognition.load_image_file(path+'/' + person['picture_path']))
 
 people_face_encodig = []
 for person_image in people_images:
